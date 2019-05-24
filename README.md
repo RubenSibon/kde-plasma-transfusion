@@ -19,13 +19,20 @@ cd transfuse
 chmod +x transfuse.sh
 ```
 
-### Run:
+### How to use:
 
 ```shell
-./transfuse.sh backup
+Possible commands:
+ 'backup' to create a compressed backup
+ 'copy' to copy without compressing (useful for editing)
+ 'compress' to compress a transfusion folder (such as after using 'copy')
+ 'restore' to merge a backup into your home directory
+
+For example:
+ ./transfuse.sh backup
 ```
 
-> Note: 
+> Note: You can use 'help' or '-h' for the instructions above.
 
 ### Donate  
 
