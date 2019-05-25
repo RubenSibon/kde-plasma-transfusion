@@ -13,7 +13,7 @@ fi
 # Ugh. What time is it?
 NOW=$(date +"%Y%m%d_%H%M")
 # Who are you anyways?
-YOU=$(who am i | awk '{print $1}')
+#YOU=$(who am i | awk '{print $1}')
 # We dont need no stinkin coppers.
 if [ "$EUID" = 0 ]
   then echo -e "\nDo not run this script as root!\n";
@@ -22,8 +22,9 @@ fi
 
 case "$1" in
 
--b|-B|backup)if
+-b|backup)if
 
+ read -p "Please enter the name of the user to backup and compress configs from: "  YOU
  mkdir -p ./"$YOU"_transfusion_"$NOW";
  mkdir -p ./"$YOU"_transfusion_"$NOW"/.config;
  mkdir -p ./"$YOU"_transfusion_"$NOW"/.gtkrc-2.0;
@@ -80,6 +81,7 @@ case "$1" in
 
 -C|copy)if
 
+ read -p "Please enter the name of the user to copy configs from: "  YOU
  mkdir -p ./"$YOU"_transfusion_"$NOW";
  mkdir -p ./"$YOU"_transfusion_"$NOW"/.config;
  mkdir -p ./"$YOU"_transfusion_"$NOW"/.gtkrc-2.0;
@@ -150,7 +152,7 @@ case "$1" in
  echo -e "For example:\n ./transfuse.sh backup\n";
  exit;;
  
--r|-R|restore) if
+-r|restore) if
 
  TRANSF=$(find . -type f -name '*_transfusion_*.gz')
  read -p "Please enter the name of the user to restore configs to: "  PATIENT
