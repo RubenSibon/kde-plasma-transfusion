@@ -45,6 +45,7 @@ case "$1" in
  rsync -av --ignore-missing-args /home/$YOU/.config/kdeconnect ./"$YOU"_transfusion_"$NOW"/.config/;
  rsync -av --ignore-missing-args /home/$YOU/.config/kdeglobals ./"$YOU"_transfusion_"$NOW"/.config/;
  rsync -av --ignore-missing-args /home/$YOU/.config/kglobalshortcutsrc ./"$YOU"_transfusion_"$NOW"/.config/;
+ rsync -av --ignore-missing-args /home/$YOU/.config/khotkeysrc ./"$YOU"_transfusion_"$NOW"/.config/;
  rsync -av --ignore-missing-args /home/$YOU/.config/konsolerc ./"$YOU"_transfusion_"$NOW"/.config/;
  rsync -av --ignore-missing-args /home/$YOU/.config/kscreenlockerrc ./"$YOU"_transfusion_"$NOW"/.config/;
  rsync -av --ignore-missing-args /home/$YOU/.config/ksplashrc ./"$YOU"_transfusion_"$NOW"/.config/;
@@ -103,6 +104,7 @@ case "$1" in
  rsync -av --ignore-missing-args /home/$YOU/.config/kdeconnect ./"$YOU"_transfusion_"$NOW"/.config/;
  rsync -av --ignore-missing-args /home/$YOU/.config/kdeglobals ./"$YOU"_transfusion_"$NOW"/.config/;
  rsync -av --ignore-missing-args /home/$YOU/.config/kglobalshortcutsrc ./"$YOU"_transfusion_"$NOW"/.config/;
+ rsync -av --ignore-missing-args /home/$YOU/.config/khotkeysrc ./"$YOU"_transfusion_"$NOW"/.config/;
  rsync -av --ignore-missing-args /home/$YOU/.config/konsolerc ./"$YOU"_transfusion_"$NOW"/.config/;
  rsync -av --ignore-missing-args /home/$YOU/.config/kscreenlockerrc ./"$YOU"_transfusion_"$NOW"/.config/;
  rsync -av --ignore-missing-args /home/$YOU/.config/ksplashrc ./"$YOU"_transfusion_"$NOW"/.config/;
