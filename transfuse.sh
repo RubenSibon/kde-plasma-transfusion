@@ -80,6 +80,29 @@ case "$1" in
  exit;
  fi;; # backup and squish
 
+-BR|backuproot)if
+
+ mkdir -p ./root_transfusion_"$NOW";
+ mkdir -p ./root_transfusion_"$NOW"/usr/share;
+ rsync -av --ignore-missing-args /usr/share/aurorae ./root_transfusion_"$NOW"/usr/share/;
+ rsync -av --ignore-missing-args /usr/share/color-schemes ./root_transfusion_"$NOW"/usr/share/;
+ rsync -av --ignore-missing-args /usr/share/fonts ./root_transfusion_"$NOW"/usr/share/;
+ rsync -av --ignore-missing-args /usr/share/icons ./root_transfusion_"$NOW"/usr/share/;
+ rsync -av --ignore-missing-args /usr/share/kde-gtk-config ./root_transfusion_"$NOW"/usr/share/;
+ rsync -av --ignore-missing-args /usr/share/kde4 ./root_transfusion_"$NOW"/usr/share/;
+ rsync -av --ignore-missing-args /usr/share/konsole ./root_transfusion_"$NOW"/usr/share/;
+ rsync -av --ignore-missing-args /usr/share/Kvantum ./root_transfusion_"$NOW"/usr/share/;
+ rsync -av --ignore-missing-args /usr/share/plasma ./root_transfusion_"$NOW"/usr/share/;
+ rsync -av --ignore-missing-args /usr/share/sddm ./root_transfusion_"$NOW"/usr/share/;
+ rsync -av --ignore-missing-args /usr/share/themes ./root_transfusion_"$NOW"/usr/share/;
+ rsync -av --ignore-missing-args /usr/share/wallpapers ./root_transfusion_"$NOW"/usr/share/;
+ tar -zcvf ./root_transfusion_"$NOW".tar.gz ./root_transfusion_"$NOW";
+ rm -rf ./root_transfusion_"$NOW";
+ then echo -e "\n\nWe copied and compressed items recursively from:\n\n/usr/share/\n\nThe compressed backup is named root_transfusion_"$NOW".tar.gz\n" ;
+ else echo "Something went wrong! Yell at cscs!" ;
+ exit;
+ fi;; # backup and squish
+
 -C|copy)if
 
  read -p "Please enter the name of the user to copy configs from: "  YOU
@@ -150,11 +173,12 @@ case "$1" in
  fi;; # now you can sit on it
 
 -h|help)
+
  echo -e "\nPossible commands:\n 'backup' to create a compressed backup\n 'copy' to copy without compressing (useful for editing)\n 'compress' to compress a transfusion folder (such as after using 'copy')\n 'restore' to merge a backup into your home directory\n";
  echo -e "For example:\n ./transfuse.sh backup\n";
  exit;;
  
--r|restore) if
+-r|restore)if
 
  TRANSF=$(find . -type f -name '*_transfusion_*.gz')
  read -p "Please enter the name of the user to restore configs to: "  PATIENT
@@ -165,7 +189,7 @@ case "$1" in
  then echo -e "\nConfigs Restored from $COPYF\n" ;
  else echo "Something went wrong! Yell at cscs!" ;
  exit;
- fi ;; # restore from backup
+ fi;; # restore from backup
 
 esac
 
