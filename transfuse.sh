@@ -24,7 +24,9 @@ case "$1" in
 
 -b|backup)if
 
- read -p "Please enter the name of the user to backup and compress configs from: "  YOU
+ echo -e "\nPlease enter the name of the user to backup and compress configs from:\n ";  
+ read YOU;
+ {
  mkdir -p ./"$YOU"_transfusion_"$NOW";
  mkdir -p ./"$YOU"_transfusion_"$NOW"/.config;
  mkdir -p ./"$YOU"_transfusion_"$NOW"/.gtkrc-2.0;
@@ -75,8 +77,9 @@ case "$1" in
  rsync -rltD --ignore-missing-args /home/$YOU/.local/share/plasma_icons ./"$YOU"_transfusion_"$NOW"/.local/share/;
  tar -zcvf ./"$YOU"_transfusion_"$NOW".tar.gz ./"$YOU"_transfusion_"$NOW";
  rm -rf ./"$YOU"_transfusion_"$NOW";
- then echo -e "\n\nWe copied and compressed items recursively from:\n\n~\n~/.config\n~/.local/share\n\nThe compressed backup is named "$YOU"_transfusion_"$NOW".tar.gz\n" ;
- else echo "Something went wrong! Yell at cscs!" ;
+ } &> /dev/null
+ then echo -e "\nWe copied and compressed items recursively from:\n\n~\n~/.config\n~/.local/share\n\nThe compressed backup is named "$YOU"_transfusion_"$NOW".tar.gz\n" ;
+ else echo -e "\nSomething went wrong! Yell at cscs!\n" ;
  exit;
  fi;; # backup and squish
 
@@ -99,13 +102,15 @@ case "$1" in
  tar -zcvf ./root_transfusion_"$NOW".tar.gz ./root_transfusion_"$NOW";
  rm -rf ./root_transfusion_"$NOW";
  then echo -e "\n\nWe copied and compressed items recursively from:\n\n/usr/share/\n\nThe compressed backup is named root_transfusion_"$NOW".tar.gz\n" ;
- else echo "Something went wrong! Yell at cscs!" ;
+ else echo -e "\nSomething went wrong! Yell at cscs!\n" ;
  exit;
  fi;; # backup and squish
 
 -C|copy)if
 
- read -p "Please enter the name of the user to copy configs from: "  YOU
+ echo -e "\nPlease enter the name of the user to copy configs from:\n ";
+ read YOU;
+ {
  mkdir -p ./"$YOU"_transfusion_"$NOW";
  mkdir -p ./"$YOU"_transfusion_"$NOW"/.config;
  mkdir -p ./"$YOU"_transfusion_"$NOW"/.gtkrc-2.0;
@@ -155,20 +160,23 @@ case "$1" in
  rsync -rltD --ignore-missing-args /home/$YOU/.local/share/kservices5 ./"$YOU"_transfusion_"$NOW"/.local/share/;
  rsync -rltD --ignore-missing-args /home/$YOU/.local/share/plasma ./"$YOU"_transfusion_"$NOW"/.local/share/;
  rsync -rltD --ignore-missing-args /home/$YOU/.local/share/plasma_icons ./"$YOU"_transfusion_"$NOW"/.local/share/;
+ } &> /dev/null
  then echo -e "\n\nWe copied items recursively from:\n\n~\n~/.config\n~/.local/share\n\nThe new directory is timestamped and named "$YOU"_transfusion_"$NOW"\n" ;
- else echo "Something went wrong! Yell at cscs!" ;
+ else echo -e "\nSomething went wrong! Yell at cscs!\n" ;
  exit;
  fi;; # make a folder but dont sit on it
 
 -c|compress)if
 
  COPYDIR=$(find . -type d -name '*_transfusion_*')
+ {
  find . -type d -name '*_transfusion_*' -exec sh -c 'i="$1"; tar -zcvf "${i%}.tar.gz" "$i"' _ {} \;
 # COPYDIR=$(find -type d -name "*_transfusion_*")
 # tar -zcvf "$COPYDIR".tar.gz "$COPYDIR";
 # rm -rf ./"$YOU"_transfusion_"$NOW";
+ } &> /dev/null
  then echo -e "\n\nCompressed items recursively from:\n\n"$COPYDIR"\n";
- else echo "Something went wrong! Yell at cscs!" ;
+ else echo -e "\nSomething went wrong! Yell at cscs!\n" ;
  exit;
  fi;; # now you can sit on it
 
@@ -181,13 +189,16 @@ case "$1" in
 -r|restore)if
 
  TRANSF=$(find . -type f -name '*_transfusion_*.gz')
- read -p "Please enter the name of the user to restore configs to: "  PATIENT
+ echo -e "\nPlease enter the name of the user to restore configs to::\n ";
+ read PATIENT;
+ {
  tar -xzvf "$TRANSF" ;
  COPYF=${TRANSF::-7}
  rsync -rltD --ignore-missing-args $COPYF/ --include=".*" /home/$PATIENT/ || echo "Are you sure that was the right username?" && exit ;
  rm -rf "$COPYF" ;
+ } &> /dev/null
  then echo -e "\nConfigs Restored from $COPYF\n" ;
- else echo "Something went wrong! Yell at cscs!" ;
+ else echo -e "\nSomething went wrong! Yell at cscs!\n" ;
  exit;
  fi;; # restore from backup
 
