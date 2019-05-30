@@ -64,8 +64,8 @@ case "$1" in
  rsync -rltD --ignore-missing-args /home/$YOU/.config/qtcurve ./"$YOU"_transfusion_"$NOW"/.config/;
  rsync -rltD --ignore-missing-args /home/$YOU/.config/trolltech.conf ./"$YOU"_transfusion_"$NOW"/.config/;
  rsync -rltD --ignore-missing-args /home/$YOU/.gtkrc-2.0 ./"$YOU"_transfusion_"$NOW"/;
- rsync -rltD --ignore-missing-args /home/$YOU/.kde ./"$YOU"_transfusion_"$NOW"/.config;
- rsync -rltD --ignore-missing-args /home/$YOU/.kde4 ./"$YOU"_transfusion_"$NOW"/.config;
+ rsync -rltD --ignore-missing-args /home/$YOU/.kde ./"$YOU"_transfusion_"$NOW"/;
+ rsync -rltD --ignore-missing-args /home/$YOU/.kde4 ./"$YOU"_transfusion_"$NOW"/;
  rsync -rltD --ignore-missing-args /home/$YOU/.local/share/aurorae ./"$YOU"_transfusion_"$NOW"/.local/share/;
  rsync -rltD --ignore-missing-args /home/$YOU/.local/share/color-schemes ./"$YOU"_transfusion_"$NOW"/.local/share/;
  rsync -rltD --ignore-missing-args /home/$YOU/.local/share/kate ./"$YOU"_transfusion_"$NOW"/.local/share/;
@@ -146,8 +146,8 @@ case "$1" in
  rsync -rltD --ignore-missing-args /home/$YOU/.config/qtcurve ./"$YOU"_transfusion_"$NOW"/.config/;
  rsync -rltD --ignore-missing-args /home/$YOU/.config/trolltech.conf ./"$YOU"_transfusion_"$NOW"/.config/;
  rsync -rltD --ignore-missing-args /home/$YOU/.gtkrc-2.0 ./"$YOU"_transfusion_"$NOW"/;
- rsync -rltD --ignore-missing-args /home/$YOU/.kde ./"$YOU"_transfusion_"$NOW"/.config;
- rsync -rltD --ignore-missing-args /home/$YOU/.kde4 ./"$YOU"_transfusion_"$NOW"/.config;
+ rsync -rltD --ignore-missing-args /home/$YOU/.kde ./"$YOU"_transfusion_"$NOW"/;
+ rsync -rltD --ignore-missing-args /home/$YOU/.kde4 ./"$YOU"_transfusion_"$NOW"/;
  rsync -rltD --ignore-missing-args /home/$YOU/.local/share/aurorae ./"$YOU"_transfusion_"$NOW"/.local/share/;
  rsync -rltD --ignore-missing-args /home/$YOU/.local/share/color-schemes ./"$YOU"_transfusion_"$NOW"/.local/share/;
  rsync -rltD --ignore-missing-args /home/$YOU/.local/share/kate ./"$YOU"_transfusion_"$NOW"/.local/share/;
