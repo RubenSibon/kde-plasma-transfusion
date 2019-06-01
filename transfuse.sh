@@ -3,33 +3,36 @@
 ## Automates backing up and restoring Plasma user configs   #
 #####                        cscs                       #####
 
-# What do you want?
-if [ $# -eq 0 ]; then
-    echo -e "\n I dont know what to do\n";
-    echo -e "Possible commands:\n 'backup' to create a compressed backup\n 'copy' to copy without compressing (useful for editing)\n 'compress' to compress a transfusion folder (such as after using 'copy')\n 'restore' to merge a backup into your home directory\n";
-    echo -e "For example:\n ./transfuse.sh backup\n";
-    exit;
-fi
-# Ugh. What time is it?
-NOW=$(date +"%Y%m%d_%H%M")
-# Who are you anyways?
-#YOU=$(who am i | awk '{print $1}')
 # We dont need no stinkin coppers.
-if [ "$EUID" = 0 ]
-  then echo -e "\nDo not run this script as root!\n";
+if [ "$EUID" = 0 ];
+  then echo -e "\n Do not run this script as root!\n";
   exit;
 fi
 
+if [ $# -eq 0 ]; 
+  then echo -e "\n I dont know what to do.\n\n Use '-h' or '--help' for more info.\n";
+  exit;
+fi
+
+while test $# -gt 0; do
+
+NOW=$(date +"%Y%m%d_%H%M")
+HELP="\nPossible commands:\n '-b USERNAME' to create a compressed backup\n '-BR' to backup root files and folders\n '-C USERNAME' to copy without compressing (useful for editing)\n '-c' to compress a transfusion folder (such as after using 'copy')\n '-h' to display this help message\n '-r USERNAME' to restore a backup into a users home directory\n For extra verbosity use the 'CHARTS=1' environment variable\n\nExample usage:\n ./transfuse.sh -b manjaroo\n"
+
 case "$1" in
 
--b|backup)if
-
- echo -e "\nPlease enter the name of the user to backup and compress configs from:\n ";  
- read YOU;
- {
+-b|backup|--backup)
+ #echo -e "\nPlease enter the name of the user to backup and compress configs from:\n ";  
+ #read YOU;
+ shift
+ if test $# -gt 0; then
+ YOU=`echo $1 | sed -e 's/^[^ ]* //g'`
+  if [ ! -d "/home/$YOU" ]; then
+   echo -e "\n Directory does not exist\n";
+   exit;
+  fi;
  mkdir -p ./"$YOU"_transfusion_"$NOW";
  mkdir -p ./"$YOU"_transfusion_"$NOW"/.config;
- mkdir -p ./"$YOU"_transfusion_"$NOW"/.gtkrc-2.0;
  mkdir -p ./"$YOU"_transfusion_"$NOW"/.kde;
  mkdir -p ./"$YOU"_transfusion_"$NOW"/.kde4;
  mkdir -p ./"$YOU"_transfusion_"$NOW"/.local/share;
@@ -75,21 +78,29 @@ case "$1" in
  rsync -rltD --ignore-missing-args /home/$YOU/.local/share/kservices5 ./"$YOU"_transfusion_"$NOW"/.local/share/;
  rsync -rltD --ignore-missing-args /home/$YOU/.local/share/plasma ./"$YOU"_transfusion_"$NOW"/.local/share/;
  rsync -rltD --ignore-missing-args /home/$YOU/.local/share/plasma_icons ./"$YOU"_transfusion_"$NOW"/.local/share/;
- tar -zcvf ./"$YOU"_transfusion_"$NOW".tar.gz ./"$YOU"_transfusion_"$NOW";
+  if [[ $CHARTS -eq 1 ]]; 
+   then
+   tar -zcvf ./"$YOU"_transfusion_"$NOW".tar.gz ./"$YOU"_transfusion_"$NOW";
+   else 
+   { 
+   tar -zcvf ./"$YOU"_transfusion_"$NOW".tar.gz ./"$YOU"_transfusion_"$NOW"
+   } &> /dev/null;
+  fi
  rm -rf ./"$YOU"_transfusion_"$NOW";
- } &> /dev/null
- then echo -e "\nWe copied and compressed items recursively from:\n\n~\n~/.config\n~/.local/share\n\nThe compressed backup is named "$YOU"_transfusion_"$NOW".tar.gz\n" ;
- else echo -e "\nSomething went wrong! Yell at cscs!\n" ;
+ echo -e "\nWe copied and compressed items recursively from:\n\n~\n~/.config\n~/.local/share\n\nThe compressed backup is named "$YOU"_transfusion_"$NOW".tar.gz\n" ;
+ else 
+ echo -e "\n I dont know what to do";
+ echo -e "$HELP";
  exit;
- fi;; # backup and squish
+ fi;
+ shift;; # backup and squish
 
--BR|backuproot)if
+-BR|backuproot|--backuproot)if
 
  mkdir -p ./root_transfusion_"$NOW";
  mkdir -p ./root_transfusion_"$NOW"/usr/share;
  rsync -av --ignore-missing-args /usr/share/aurorae ./root_transfusion_"$NOW"/usr/share/;
  rsync -av --ignore-missing-args /usr/share/color-schemes ./root_transfusion_"$NOW"/usr/share/;
- rsync -av --ignore-missing-args /usr/share/fonts ./root_transfusion_"$NOW"/usr/share/;
  rsync -av --ignore-missing-args /usr/share/icons ./root_transfusion_"$NOW"/usr/share/;
  rsync -av --ignore-missing-args /usr/share/kde-gtk-config ./root_transfusion_"$NOW"/usr/share/;
  rsync -av --ignore-missing-args /usr/share/kde4 ./root_transfusion_"$NOW"/usr/share/;
@@ -106,18 +117,21 @@ case "$1" in
  exit;
  fi;; # backup and squish
 
--C|copy)if
+-C|copy|--copy)
 
- echo -e "\nPlease enter the name of the user to copy configs from:\n ";
- read YOU;
+ shift
+ if test $# -gt 0; then
+ YOU=`echo $1 | sed -e 's/^[^ ]* //g'`
+  if [ ! -d "/home/$YOU" ]; then
+   echo -e "\n Directory does not exist\n";
+   exit;
+  fi;
  {
  mkdir -p ./"$YOU"_transfusion_"$NOW";
  mkdir -p ./"$YOU"_transfusion_"$NOW"/.config;
- mkdir -p ./"$YOU"_transfusion_"$NOW"/.gtkrc-2.0;
  mkdir -p ./"$YOU"_transfusion_"$NOW"/.kde;
  mkdir -p ./"$YOU"_transfusion_"$NOW"/.kde4;
  mkdir -p ./"$YOU"_transfusion_"$NOW"/.local/share;
- #rsync || true
  rsync -rltD --ignore-missing-args /home/$YOU/.config/auroraerc ./"$YOU"_transfusion_"$NOW"/.config/;
  rsync -rltD --ignore-missing-args /home/$YOU/.config/autostart-scripts ./"$YOU"_transfusion_"$NOW"/.config/;
  rsync -rltD --ignore-missing-args /home/$YOU/.config/autostart ./"$YOU"_transfusion_"$NOW"/.config/;
@@ -160,13 +174,16 @@ case "$1" in
  rsync -rltD --ignore-missing-args /home/$YOU/.local/share/kservices5 ./"$YOU"_transfusion_"$NOW"/.local/share/;
  rsync -rltD --ignore-missing-args /home/$YOU/.local/share/plasma ./"$YOU"_transfusion_"$NOW"/.local/share/;
  rsync -rltD --ignore-missing-args /home/$YOU/.local/share/plasma_icons ./"$YOU"_transfusion_"$NOW"/.local/share/;
- } &> /dev/null
- then echo -e "\n\nWe copied items recursively from:\n\n~\n~/.config\n~/.local/share\n\nThe new directory is timestamped and named "$YOU"_transfusion_"$NOW"\n" ;
- else echo -e "\nSomething went wrong! Yell at cscs!\n" ;
+ } &> /dev/null;
+ echo -e "\n\nWe copied items recursively from:\n\n~\n~/.config\n~/.local/share\n\nThe new directory is timestamped and named "$YOU"_transfusion_"$NOW"\n" ;
+ else
+ echo -e "\n I dont know what to do";
+ echo -e "$HELP";
  exit;
- fi;; # make a folder but dont sit on it
+ fi;
+ shift;; # make a folder but dont sit on it
 
--c|compress)if
+-c|compress|--compress)if
 
  COPYDIR=$(find . -type d -name '*_transfusion_*')
  {
@@ -180,28 +197,54 @@ case "$1" in
  exit;
  fi;; # now you can sit on it
 
--h|help)
+-h|help|--help)
 
- echo -e "\nPossible commands:\n 'backup' to create a compressed backup\n 'copy' to copy without compressing (useful for editing)\n 'compress' to compress a transfusion folder (such as after using 'copy')\n 'restore' to merge a backup into your home directory\n";
- echo -e "For example:\n ./transfuse.sh backup\n";
+ echo -e "$HELP" ;
  exit;;
  
--r|restore)if
+-r|restore|--restore)
 
+# echo -e "\nPlease enter the name of the user to restore configs to::\n ";
+# read PATIENT;
+ shift
+ if test $# -gt 0; then
  TRANSF=$(find . -type f -name '*_transfusion_*.gz')
- echo -e "\nPlease enter the name of the user to restore configs to::\n ";
- read PATIENT;
- {
- tar -xzvf "$TRANSF" ;
- COPYF=${TRANSF::-7}
- rsync -rltD --ignore-missing-args $COPYF/ --include=".*" /home/$PATIENT/ || echo "Are you sure that was the right username?" && exit ;
- rm -rf "$COPYF" ;
- } &> /dev/null
- then echo -e "\nConfigs Restored from $COPYF\n" ;
- else echo -e "\nSomething went wrong! Yell at cscs!\n" ;
+ PATIENT=`echo $1 | sed -e 's/^[^ ]* //g'`
+ echo -e "";
+ read -p "Are you sure you would like to restore "$TRANSF" to /home/$PATIENT/? (Y/N) " -n 1 -r ;
+ echo -e "\n";
+  if [[ ! $REPLY =~ ^[Yy]$ ]];
+   then exit 1;
+  fi; 
+  if [[ $CHARTS -eq 1 ]]; 
+   then 
+   tar -xzvf "$TRANSF" ;
+   COPYF=${TRANSF::-7}
+   rsync -rltD --ignore-missing-args $COPYF/ --include=".*" /home/$PATIENT/ || echo "Are you sure that was the right username?" && exit ;
+   rm -rf "$COPYF" ;
+   else
+   {
+   tar -xzvf "$TRANSF" ;
+   COPYF=${TRANSF::-7}
+   rsync -rltD --ignore-missing-args $COPYF/ --include=".*" /home/$PATIENT/ || echo "Are you sure that was the right username?" && exit ;
+   rm -rf "$COPYF" ;
+   } &> /dev/null ;
+  fi;
+ echo -e "\nConfigs Restored from $COPYF\n" ;
+ else
+ echo -e "\n I dont know what to do";
+ echo -e "$HELP";
  exit;
- fi;; # restore from backup
+ fi;
+ shift;; # restore from backup
+
+ *)
+ echo -e "$HELP";
+ break
+ ;;
 
 esac
+
+done
 
 exit
