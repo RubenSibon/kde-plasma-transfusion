@@ -23,16 +23,20 @@ chmod +x transfuse.sh
 
 ```shell
 Possible commands:
- 'backup' to create a compressed backup
- 'copy' to copy without compressing (useful for editing)
- 'compress' to compress a transfusion folder (such as after using 'copy')
- 'restore' to merge a backup into your home directory
+ '-b USERNAME' or 'backup USERNAME'       to create a compressed backup
+ '-BR' or 'backuproot'                    to backup root files and folders
+ '-C USERNAME' or 'copy USERNAME'         to copy without compressing (useful for editing)
+ '-c' or 'compress'                       to compress a transfusion folder (such as after using 'copy')
+ '-h' or 'help' or '--help'               to display this help message
+ '-r USERNAME' or 'restore USERNAME'      to restore a backup into a users home directory
 
-For example:
- ./transfuse.sh backup
+For extra verbosity use the 'CHARTS=1' environment variable
+
+Example usage:
+ ./transfuse.sh -b manjaroo
 ```
 
-> Note: You can use 'help' or '-h' for the instructions above.
+> Note: You can use '--help' or '-h' for the instructions above.
 
 ### Donate  
 
