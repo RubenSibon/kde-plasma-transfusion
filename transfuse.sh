@@ -25,7 +25,7 @@ if [ $# -eq 0 ];
               break
               ;;
           "Copy")
-              read -p "Please enter the name of the user to backup and compress configs from: "  YOU
+              read -p "Please enter the name of the user to copy configs from: "  YOU
               "$0" -C "$YOU";
               break
               ;;
@@ -34,7 +34,7 @@ if [ $# -eq 0 ];
               break
               ;;
           "Restore")
-              read -p "Please enter the name of the user to backup and compress configs from: "  PATIENT
+              read -p "Please enter the name of the user to restore configs to: "  PATIENT
               "$0" -r "$PATIENT";
               break
               ;;
