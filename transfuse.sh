@@ -10,9 +10,41 @@ if [ "$EUID" = 0 ];
 fi
 
 if [ $# -eq 0 ]; 
-  then echo -e "\n I dont know what to do.\n\n Use '-h' or '--help' for more info.\n";
-  exit;
-fi
+  #then echo -e "\n I dont know what to do.\n\n Use '-h' or '--help' for more info.\n";
+  #exit;
+  then
+  PS3='Please enter your choice: '
+  options=("Backup" "Copy" "Compress" "Restore" "Quit")
+  select opt in "${options[@]}"
+  do
+      case $opt in
+          "Backup")
+              echo ""
+              read -p "Please enter the name of the user to backup and compress configs from: "  YOU
+              "$0" -b "$YOU";
+              break
+              ;;
+          "Copy")
+              read -p "Please enter the name of the user to backup and compress configs from: "  YOU
+              "$0" -C "$YOU";
+              break
+              ;;
+          "Compress")
+              "$0" -c;
+              break
+              ;;
+          "Restore")
+              read -p "Please enter the name of the user to backup and compress configs from: "  PATIENT
+              "$0" -r "$PATIENT";
+              break
+              ;;
+          "Quit")
+              break
+              ;;
+          *) echo "invalid option $REPLY";;
+      esac
+  done;
+fi;
 
 while test $# -gt 0; do
 
@@ -220,6 +252,14 @@ case "$1" in
  if test $# -gt 0; then
  TRANSF=$(find . -type f -name '*_transfusion_*.gz')
  PATIENT=`echo $1 | sed -e 's/^[^ ]* //g'`
+  if [ ! -d "/home/$PATIENT" ]; then
+   echo -e "\n Directory /home/$PATIENT does not exist\n";
+   exit;
+  fi;
+  if [ ! -f "$TRANSF" ]; then
+   echo -e "\n Backup does not exist\n";
+   exit;
+  fi
  echo -e "";
  read -p "Are you sure you would like to restore "$TRANSF" to /home/$PATIENT/? (Y/N) " -n 1 -r ;
  echo -e "\n";
