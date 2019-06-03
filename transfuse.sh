@@ -17,18 +17,17 @@ fi
 while test $# -gt 0; do
 
 NOW=$(date +"%Y%m%d_%H%M")
-HELP="\nPossible commands:\n '-b USERNAME' to create a compressed backup\n '-BR' to backup root files and folders\n '-C USERNAME' to copy without compressing (useful for editing)\n '-c' to compress a transfusion folder (such as after using 'copy')\n '-h' to display this help message\n '-r USERNAME' to restore a backup into a users home directory\n For extra verbosity use the 'CHARTS=1' environment variable\n\nExample usage:\n ./transfuse.sh -b manjaroo\n"
+HELP="\nPossible commands:\n '-b USERNAME' or 'backup USERNAME'       to create a compressed backup\n '-BR' or 'backuproot'                    to backup root files and folders\n '-C USERNAME' or 'copy USERNAME'         to copy without compressing (useful for editing)\n '-c' or 'compress'                       to compress a transfusion folder (such as after using 'copy')\n '-h' or 'help' or '--help'               to display this help message\n '-r USERNAME' or 'restore USERNAME'      to restore a backup into a users home directory\n\nFor extra verbosity use the 'CHARTS=1' environment variable\n\nExample usage:\n ./transfuse.sh -b manjaroo\n"
 
 case "$1" in
 
 -b|backup|--backup)
- #echo -e "\nPlease enter the name of the user to backup and compress configs from:\n ";  
- #read YOU;
+
  shift
  if test $# -gt 0; then
  YOU=`echo $1 | sed -e 's/^[^ ]* //g'`
   if [ ! -d "/home/$YOU" ]; then
-   echo -e "\n Directory does not exist\n";
+   echo -e "\n Directory /home/$YOU does not exist\n";
    exit;
   fi;
  mkdir -p ./"$YOU"_transfusion_"$NOW";
@@ -83,9 +82,9 @@ case "$1" in
    tar -zcvf ./"$YOU"_transfusion_"$NOW".tar.gz ./"$YOU"_transfusion_"$NOW";
    else 
    { 
-   tar -zcvf ./"$YOU"_transfusion_"$NOW".tar.gz ./"$YOU"_transfusion_"$NOW"
+   tar -zcvf ./"$YOU"_transfusion_"$NOW".tar.gz ./"$YOU"_transfusion_"$NOW";
    } &> /dev/null;
-  fi
+  fi;
  rm -rf ./"$YOU"_transfusion_"$NOW";
  echo -e "\nWe copied and compressed items recursively from:\n\n~\n~/.config\n~/.local/share\n\nThe compressed backup is named "$YOU"_transfusion_"$NOW".tar.gz\n" ;
  else 
@@ -95,8 +94,9 @@ case "$1" in
  fi;
  shift;; # backup and squish
 
--BR|backuproot|--backuproot)if
+-BR|backuproot|--backuproot)
 
+ if
  mkdir -p ./root_transfusion_"$NOW";
  mkdir -p ./root_transfusion_"$NOW"/usr/share;
  rsync -av --ignore-missing-args /usr/share/aurorae ./root_transfusion_"$NOW"/usr/share/;
@@ -110,7 +110,14 @@ case "$1" in
  rsync -av --ignore-missing-args /usr/share/sddm ./root_transfusion_"$NOW"/usr/share/;
  rsync -av --ignore-missing-args /usr/share/themes ./root_transfusion_"$NOW"/usr/share/;
  rsync -av --ignore-missing-args /usr/share/wallpapers ./root_transfusion_"$NOW"/usr/share/;
- tar -zcvf ./root_transfusion_"$NOW".tar.gz ./root_transfusion_"$NOW";
+  if [[ $CHARTS -eq 1 ]]; 
+   then
+   tar -zcvf ./root_transfusion_"$NOW".tar.gz ./root_transfusion_"$NOW";
+   else
+   {
+   tar -zcvf ./root_transfusion_"$NOW".tar.gz ./root_transfusion_"$NOW";
+   } &> /dev/null;
+  fi;
  rm -rf ./root_transfusion_"$NOW";
  then echo -e "\n\nWe copied and compressed items recursively from:\n\n/usr/share/\n\nThe compressed backup is named root_transfusion_"$NOW".tar.gz\n" ;
  else echo -e "\nSomething went wrong! Yell at cscs!\n" ;
@@ -123,7 +130,7 @@ case "$1" in
  if test $# -gt 0; then
  YOU=`echo $1 | sed -e 's/^[^ ]* //g'`
   if [ ! -d "/home/$YOU" ]; then
-   echo -e "\n Directory does not exist\n";
+   echo -e "\n Directory /home/$YOU does not exist\n";
    exit;
   fi;
  {
@@ -183,15 +190,18 @@ case "$1" in
  fi;
  shift;; # make a folder but dont sit on it
 
--c|compress|--compress)if
+-c|compress|--compress)
 
+ if
  COPYDIR=$(find . -type d -name '*_transfusion_*')
- {
- find . -type d -name '*_transfusion_*' -exec sh -c 'i="$1"; tar -zcvf "${i%}.tar.gz" "$i"' _ {} \;
-# COPYDIR=$(find -type d -name "*_transfusion_*")
-# tar -zcvf "$COPYDIR".tar.gz "$COPYDIR";
-# rm -rf ./"$YOU"_transfusion_"$NOW";
- } &> /dev/null
+  if [[ $CHARTS -eq 1 ]]; 
+   then
+   find . -type d -name '*_transfusion_*' -exec sh -c 'i="$1"; tar -zcvf "${i%}.tar.gz" "$i"' _ {} \;
+   else
+   {
+   find . -type d -name '*_transfusion_*' -exec sh -c 'i="$1"; tar -zcvf "${i%}.tar.gz" "$i"' _ {} \;
+   } &> /dev/null;
+  fi;
  then echo -e "\n\nCompressed items recursively from:\n\n"$COPYDIR"\n";
  else echo -e "\nSomething went wrong! Yell at cscs!\n" ;
  exit;
