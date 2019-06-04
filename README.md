@@ -36,7 +36,7 @@ Example usage:
  ./transfuse.sh -b manjaroo
 ```
 
-> Note: You can use '--help' or '-h' for the instructions above.
+> Note: transfuse.sh will now present you with a menu if no argument is used
 
 ### Donate  
 
