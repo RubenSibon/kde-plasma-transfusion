@@ -252,32 +252,61 @@ case "$1" in
 # read PATIENT;
  shift
  if test $# -gt 0; then
- TRANSF=$(find . -type f -name '*_transfusion_*.gz')
- PATIENT=$(echo $1 | sed -e 's/^[^ ]* //g')
-  if [ ! -d "/home/$PATIENT" ]; then
-   echo -e "\n Directory /home/$PATIENT does not exist\n";
-   exit;
-  fi;
-  if [ ! -f "$TRANSF" ]; then
-   echo -e "\n Backup does not exist\n";
-   exit;
-  fi
+# TRANSF=$(find . -type f -name '*_transfusion_*.gz')
+# PATIENT=$(echo $1 | sed -e 's/^[^ ]* //g')
+#  if [ ! -d "/home/$PATIENT" ]; then
+#   echo -e "\n Directory /home/$PATIENT does not exist\n";
+#   exit;
+#  fi;
+#  if [ ! -f "$TRANSF" ]; then
+#   echo -e "\n Backup does not exist\n";
+#   exit;
+#  fi
+ unset options i
+ while IFS= read -r -d $'\0' f; do
+   options[i++]="$f"
+ done < <(find . -maxdepth 1 -type f -name "*.tar.gz" -print0 )
+  select opt in "${options[@]}" "Quit the script"; do
+    case $opt in
+      *.tar.gz)
+        echo -e "\nBackup file $opt selected";
+        # processing
+        break
+        ;;
+      "Quit the script")
+        echo -e "\nYou chose to quit"
+        break
+        ;;
+      *)
+        echo "Invalid selection"
+        ;;
+    esac
+  done
+  PATIENT=$(echo $1 | sed -e 's/^[^ ]* //g')
+    if [ ! -d "/home/$PATIENT" ]; then
+     echo -e "\n Directory /home/$PATIENT does not exist\n";
+     exit;
+    fi;
+    if [ ! -f "$opt" ]; then
+     echo -e "\n No Backup selected\n";
+     exit;
+    fi
  echo -e "";
- read -p "Are you sure you would like to restore "$TRANSF" to /home/$PATIENT/? (Y/N) " -n 1 -r ;
+ read -p "Are you sure you would like to restore "$opt" to /home/$PATIENT/? (Y/N) " -n 1 -r ;
  echo -e "\n";
   if [[ ! $REPLY =~ ^[Yy]$ ]];
    then exit 1;
   fi; 
   if [[ $CHARTS -eq 1 ]]; 
    then 
-   tar -xzvf "$TRANSF" ;
-   COPYF=${TRANSF::-7}
+   tar -xzvf "$opt" ;
+   COPYF=${opt::-7}
    rsync -rltD --ignore-missing-args $COPYF/ --include=".*" /home/$PATIENT/;
    rm -rf "$COPYF" ;
    else
    {
-   tar -xzvf "$TRANSF" ;
-   COPYF=${TRANSF::-7}
+   tar -xzvf "$opt" ;
+   COPYF=${opt::-7}
    rsync -rltD --ignore-missing-args $COPYF/ --include=".*" /home/$PATIENT/;
    rm -rf "$COPYF" ;
    } &> /dev/null ;
@@ -286,7 +315,7 @@ case "$1" in
    then 
    echo -e "\nConfigs Restored from $COPYF\n" ;
    else
-   echo -e "Something went wrong.\nAre you sure you have rights to access that folder?\n" ;
+   echo -e "Something went wrong.\nAre you sure you have rights to access these folders?\n" ;
   fi
  else
  echo -e "\n I dont know what to do";
