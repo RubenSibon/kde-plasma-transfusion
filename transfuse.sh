@@ -25,6 +25,7 @@ if [ $# -eq 0 ];
               break
               ;;
           "Copy")
+              echo ""
               read -p "Please enter the name of the user to copy configs from: "  YOU
               "$0" -C "$YOU";
               break
@@ -34,6 +35,7 @@ if [ $# -eq 0 ];
               break
               ;;
           "Restore")
+              echo ""
               read -p "Please enter the name of the user to restore configs to: "  PATIENT
               "$0" -r "$PATIENT";
               break
@@ -118,7 +120,7 @@ case "$1" in
    } &> /dev/null;
   fi;
  rm -rf ./"$YOU"_transfusion_"$NOW";
- echo -e "\nWe copied and compressed items recursively from:\n\n~\n~/.config\n~/.local/share\n\nThe compressed backup is named "$YOU"_transfusion_"$NOW".tar.gz\n" ;
+ echo -e "\nWe copied and compressed items recursively from:\n\n~\n~/.config\n~/.local/share\n\nThe compressed backup is timestamped and named "$YOU"_transfusion_"$NOW".tar.gz\n" ;
  else 
  echo -e "\n I dont know what to do";
  echo -e "$HELP";
@@ -251,7 +253,7 @@ case "$1" in
  shift
  if test $# -gt 0; then
  TRANSF=$(find . -type f -name '*_transfusion_*.gz')
- PATIENT=`echo $1 | sed -e 's/^[^ ]* //g'`
+ PATIENT=$(echo $1 | sed -e 's/^[^ ]* //g')
   if [ ! -d "/home/$PATIENT" ]; then
    echo -e "\n Directory /home/$PATIENT does not exist\n";
    exit;
@@ -270,17 +272,22 @@ case "$1" in
    then 
    tar -xzvf "$TRANSF" ;
    COPYF=${TRANSF::-7}
-   rsync -rltD --ignore-missing-args $COPYF/ --include=".*" /home/$PATIENT/ || echo "Are you sure that was the right username?" && exit ;
+   rsync -rltD --ignore-missing-args $COPYF/ --include=".*" /home/$PATIENT/;
    rm -rf "$COPYF" ;
    else
    {
    tar -xzvf "$TRANSF" ;
    COPYF=${TRANSF::-7}
-   rsync -rltD --ignore-missing-args $COPYF/ --include=".*" /home/$PATIENT/ || echo "Are you sure that was the right username?" && exit ;
+   rsync -rltD --ignore-missing-args $COPYF/ --include=".*" /home/$PATIENT/;
    rm -rf "$COPYF" ;
    } &> /dev/null ;
   fi;
- echo -e "\nConfigs Restored from $COPYF\n" ;
+  if [[ $? -gt 0 ]] 
+   then 
+   echo -e "\nConfigs Restored from $COPYF\n" ;
+   else
+   echo -e "Something went wrong.\nAre you sure you have rights to access that folder?\n" ;
+  fi
  else
  echo -e "\n I dont know what to do";
  echo -e "$HELP";
