@@ -1,6 +1,6 @@
 # Transfuse
 
-A small script to backup, compress, and restore your plasma user configurations
+A small script to backup, compress, and restore your plasma desktop user configurations
 
 ### Download:
 
@@ -22,13 +22,21 @@ chmod +x transfuse.sh
 ### How to use:
 
 ```shell
-Possible commands:
- '-b USERNAME' or 'backup USERNAME'       to create a compressed backup
- '-BR' or 'backuproot'                    to backup root files and folders
- '-C USERNAME' or 'copy USERNAME'         to copy without compressing (useful for editing)
- '-c' or 'compress'                       to compress a transfusion folder (such as after using 'copy')
- '-h' or 'help' or '--help'               to display this help message
- '-r USERNAME' or 'restore USERNAME'      to restore a backup into a users home directory
+#####################################################################
+#                                                                   #
+#  TRANSFUSE - a Script to Backup and Restore Plasma User Configs   #
+#                                                                   #
+#  transfuse.sh [option] [USER/PATIENT]                             #
+#                                                                   #
+#  options:                                                         #
+#  help, -h, --help                               show brief help   #
+#  backup, -b, --backup USER                  backup USER configs   #
+#  backuproot, -BR, --backuproot              backup root configs   #
+#  copy, -C, --copy USER                 copy but do not compress   #
+#  compress, -c, --compress               compress copied configs   #
+#  restore, -r, --restore PATIENT    restore configs /to/ PATIENT   #
+#                                                                   #
+#####################################################################
 
 For extra verbosity use the 'CHARTS=1' environment variable
 

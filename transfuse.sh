@@ -3,6 +3,24 @@
 ## Automates backing up and restoring Plasma user configs   #
 #####                        cscs                       #####
 
+HELP=$(echo " ";
+       echo "#####################################################################";
+       echo "#                                                                   #";
+       echo "#  TRANSFUSE - a Script to Backup and Restore Plasma User Configs   #";
+       echo "#                                                                   #";
+       echo "#  transfuse.sh [option] [USER/PATIENT]                             #";
+       echo "#                                                                   #";
+       echo "#  options:                                                         #";
+       echo "#  help, -h, --help                               show brief help   #";
+       echo "#  backup, -b, --backup USER                  backup USER configs   #";
+       echo "#  backuproot, -BR, --backuproot              backup root configs   #";
+       echo "#  copy, -C, --copy USER                 copy but do not compress   #";
+       echo "#  compress, -c, --compress               compress copied configs   #";
+       echo "#  restore, -r, --restore PATIENT    restore configs /to/ PATIENT   #";
+       echo "#                                                                   #";
+       echo "#####################################################################";
+       echo " ";)
+
 # We dont need no stinkin coppers.
 if [ "$EUID" = 0 ];
   then echo -e "\n Do not run this script as root!\n";
@@ -10,8 +28,6 @@ if [ "$EUID" = 0 ];
 fi
 
 if [ $# -eq 0 ]; 
-  #then echo -e "\n I dont know what to do.\n\n Use '-h' or '--help' for more info.\n";
-  #exit;
   then
   PS3='Please enter your choice: '
   options=("Backup" "Copy" "Compress" "Restore" "Quit")
@@ -51,7 +67,6 @@ fi;
 while test $# -gt 0; do
 
 NOW=$(date +"%Y%m%d_%H%M")
-HELP="\nPossible commands:\n '-b USERNAME' or 'backup USERNAME'       to create a compressed backup\n '-BR' or 'backuproot'                    to backup root files and folders\n '-C USERNAME' or 'copy USERNAME'         to copy without compressing (useful for editing)\n '-c' or 'compress'                       to compress a transfusion folder (such as after using 'copy')\n '-h' or 'help' or '--help'               to display this help message\n '-r USERNAME' or 'restore USERNAME'      to restore a backup into a users home directory\n\nFor extra verbosity use the 'CHARTS=1' environment variable\n\nExample usage:\n ./transfuse.sh -b manjaroo\n"
 
 case "$1" in
 
@@ -123,7 +138,7 @@ case "$1" in
  echo -e "\nWe copied and compressed items recursively from:\n\n~\n~/.config\n~/.local/share\n\nThe compressed backup is timestamped and named "$YOU"_transfusion_"$NOW".tar.gz\n" ;
  else 
  echo -e "\n I dont know what to do";
- echo -e "$HELP";
+ echo "$HELP";
  exit;
  fi;
  shift;; # backup and squish
@@ -219,49 +234,52 @@ case "$1" in
  echo -e "\n\nWe copied items recursively from:\n\n~\n~/.config\n~/.local/share\n\nThe new directory is timestamped and named "$YOU"_transfusion_"$NOW"\n" ;
  else
  echo -e "\n I dont know what to do";
- echo -e "$HELP";
+ echo "$HELP";
  exit;
  fi;
  shift;; # make a folder but dont sit on it
 
 -c|compress|--compress)
 
- if
- COPYDIR=$(find . -type d -name '*_transfusion_*')
-  if [[ $CHARTS -eq 1 ]]; 
-   then
-   find . -type d -name '*_transfusion_*' -exec sh -c 'i="$1"; tar -zcvf "${i%}.tar.gz" "$i"' _ {} \;
-   else
-   {
-   find . -type d -name '*_transfusion_*' -exec sh -c 'i="$1"; tar -zcvf "${i%}.tar.gz" "$i"' _ {} \;
-   } &> /dev/null;
-  fi;
- then echo -e "\n\nCompressed items recursively from:\n\n"$COPYDIR"\n";
- else echo -e "\nSomething went wrong! Yell at cscs!\n" ;
- exit;
- fi;; # now you can sit on it
+ #COPYDIR=$(find . -type d -name '*_transfusion_*')
+  unset options i
+  while IFS= read -r -d $'\0' f; do
+    options[i++]="$f"
+  done < <(find . -maxdepth 1 -type d -name "*_transfusion_*" -print0 )
+   select opt in "${options[@]}" "Quit"; do
+     case $opt in
+       *_transfusion_*)
+          if [[ $CHARTS -eq 1 ]]; 
+           then
+           tar -zcvf "${opt}.tar.gz" "$opt";
+           else
+           {
+           tar -zcvf "${opt}.tar.gz" "$opt";
+           } &> /dev/null;
+          fi;
+          echo -e "\nCompressed items recursively from:\n\n"$opt"\n";   
+         break
+         ;;
+       "Quit")
+         echo -e "\nYou chose to quit"
+         break
+         ;;
+       *)
+         echo "Invalid selection"
+         ;;
+     esac
+   done
+ exit;; # now you can sit on it 
 
 -h|help|--help)
 
- echo -e "$HELP" ;
+ echo "$HELP" ;
  exit;;
  
 -r|restore|--restore)
 
-# echo -e "\nPlease enter the name of the user to restore configs to::\n ";
-# read PATIENT;
  shift
  if test $# -gt 0; then
-# TRANSF=$(find . -type f -name '*_transfusion_*.gz')
-# PATIENT=$(echo $1 | sed -e 's/^[^ ]* //g')
-#  if [ ! -d "/home/$PATIENT" ]; then
-#   echo -e "\n Directory /home/$PATIENT does not exist\n";
-#   exit;
-#  fi;
-#  if [ ! -f "$TRANSF" ]; then
-#   echo -e "\n Backup does not exist\n";
-#   exit;
-#  fi
  unset options i
  while IFS= read -r -d $'\0' f; do
    options[i++]="$f"
@@ -319,13 +337,13 @@ case "$1" in
   fi
  else
  echo -e "\n I dont know what to do";
- echo -e "$HELP";
+ echo "$HELP";
  exit;
  fi;
  shift;; # restore from backup
 
  *)
- echo -e "$HELP";
+ echo "$HELP";
  break
  ;;
 
