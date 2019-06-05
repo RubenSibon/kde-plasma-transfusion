@@ -22,26 +22,31 @@ chmod +x transfuse.sh
 ### How to use:
 
 ```shell
-#####################################################################
-#                                                                   #
-#  TRANSFUSE - a Script to Backup and Restore Plasma User Configs   #
-#                                                                   #
-#  transfuse.sh [option] [USER/PATIENT]                             #
-#                                                                   #
-#  options:                                                         #
-#  help, -h, --help                               show brief help   #
-#  backup, -b, --backup USER                  backup USER configs   #
-#  backuproot, -BR, --backuproot              backup root configs   #
-#  copy, -C, --copy USER                 copy but do not compress   #
-#  compress, -c, --compress               compress copied configs   #
-#  restore, -r, --restore PATIENT    restore configs /to/ PATIENT   #
-#                                                                   #
-#####################################################################
-
-For extra verbosity use the 'CHARTS=1' environment variable
+######################################################################
+#                                                                    #
+#   TRANSFUSE - a Script to Backup and Restore Plasma User Configs   #
+#                                                                    #
+#   transfuse.sh [option] [USER/PATIENT]                             #
+#                                                                    #
+#   options:                                                         #
+#   help, -h, --help                               show brief help   #
+#   backup, -b, --backup USER                  backup USER configs   #
+#   backuproot, -BR, --backuproot              backup root configs   #
+#   copy, -C, --copy USER                 copy but do not compress   #
+#   compress, -c, --compress               compress copied configs   #
+#   pkglists, -p, --pkglists     create list of installed packages** #
+#   pkgrestore, -pr, --pkgrestore         reinstall from a pkglist** #
+#   restore, -r, --restore PATIENT    restore configs /to/ PATIENT   #
+#                                                                    #
+#                            **NOTES**                               #
+#  pkg* options depnd on pacman package manager                      #
+#  CHARTS=1 environment variable will provide more verbose output    #
+#                                                                    #
+######################################################################
 
 Example usage:
- ./transfuse.sh -b manjaroo
+
+./transfuse.sh -b manjaroo
 ```
 
 > Note: transfuse.sh will now present you with a menu if no argument is used

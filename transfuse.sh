@@ -4,25 +4,27 @@
 #####                        cscs                       #####
 
 HELP=$(echo " ";
-       echo "#####################################################################";
-       echo "#                                                                   #";
-       echo "#  TRANSFUSE - a Script to Backup and Restore Plasma User Configs   #";
-       echo "#                                                                   #";
-       echo "#  transfuse.sh [option] [USER/PATIENT]                             #";
-       echo "#                                                                   #";
-       echo "#  options:                                                         #";
-       echo "#  help, -h, --help                               show brief help   #";
-       echo "#  backup, -b, --backup USER                  backup USER configs   #";
-       echo "#  backuproot, -BR, --backuproot              backup root configs   #";
-       echo "#  copy, -C, --copy USER                 copy but do not compress   #";
-       echo "#  compress, -c, --compress               compress copied configs   #";
-       echo "#  pkglists, -p, --pkglists     create list of installed packages** #";
-       echo "#  pkgrestore, -pr, --pkgrestore         reinstall from a pkglist** #";
-       echo "#  restore, -r, --restore PATIENT    restore configs /to/ PATIENT   #";
-       echo "#                                                                   #";
-       echo "#  **    pkg commands depend on the pacman package manager     **   #";
-       echo "#                                                                   #";
-       echo "#####################################################################";
+       echo "######################################################################";
+       echo "#                                                                    #";
+       echo "#   TRANSFUSE - a Script to Backup and Restore Plasma User Configs   #";
+       echo "#                                                                    #";
+       echo "#   transfuse.sh [option] [USER/PATIENT]                             #";
+       echo "#                                                                    #";
+       echo "#   options:                                                         #";
+       echo "#   help, -h, --help                               show brief help   #";
+       echo "#   backup, -b, --backup USER                  backup USER configs   #";
+       echo "#   backuproot, -BR, --backuproot              backup root configs   #";
+       echo "#   copy, -C, --copy USER                 copy but do not compress   #";
+       echo "#   compress, -c, --compress               compress copied configs   #";
+       echo "#   pkglists, -p, --pkglists     create list of installed packages** #";
+       echo "#   pkgrestore, -pr, --pkgrestore         reinstall from a pkglist** #";
+       echo "#   restore, -r, --restore PATIENT    restore configs /to/ PATIENT   #";
+       echo "#                                                                    #";
+       echo "#                            **NOTES**                               #";
+       echo "#  pkg* options depnd on pacman package manager                      #";
+       echo "#  CHARTS=1 environment variable will provide more verbose output    #";
+       echo "#                                                                    #";
+       echo "######################################################################";
        echo " ";)
 NOW=$(date +"%Y%m%d_%H%M")
 # We dont need no stinkin coppers.
