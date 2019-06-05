@@ -20,7 +20,7 @@ HELP=$(echo " ";
        echo "#                                                                   #";
        echo "#####################################################################";
        echo " ";)
-
+NOW=$(date +"%Y%m%d_%H%M")
 # We dont need no stinkin coppers.
 if [ "$EUID" = 0 ];
   then echo -e "\n Do not run this script as root!\n";
@@ -30,7 +30,7 @@ fi
 if [ $# -eq 0 ]; 
   then
   PS3='Please enter your choice: '
-  options=("Backup" "Copy" "Compress" "Restore" "Quit")
+  options=("Backup" "Copy" "Compress" "Restore" "Packagelists" "Quit")
   select opt in "${options[@]}"
   do
       case $opt in
@@ -56,6 +56,10 @@ if [ $# -eq 0 ];
               "$0" -r "$PATIENT";
               break
               ;;
+          "Packagelists")
+              "$0" -p;
+              break
+              ;;
           "Quit")
               break
               ;;
@@ -65,8 +69,6 @@ if [ $# -eq 0 ];
 fi;
 
 while test $# -gt 0; do
-
-NOW=$(date +"%Y%m%d_%H%M")
 
 case "$1" in
 
@@ -145,7 +147,6 @@ case "$1" in
 
 -BR|backuproot|--backuproot)
 
- if
  mkdir -p ./root_transfusion_"$NOW";
  mkdir -p ./root_transfusion_"$NOW"/usr/share;
  rsync -av --ignore-missing-args /usr/share/aurorae ./root_transfusion_"$NOW"/usr/share/;
@@ -168,10 +169,8 @@ case "$1" in
    } &> /dev/null;
   fi;
  rm -rf ./root_transfusion_"$NOW";
- then echo -e "\n\nWe copied and compressed items recursively from:\n\n/usr/share/\n\nThe compressed backup is named root_transfusion_"$NOW".tar.gz\n" ;
- else echo -e "\nSomething went wrong! Yell at cscs!\n" ;
- exit;
- fi;; # backup and squish
+ echo -e "\n\nWe copied and compressed items recursively from:\n\n/usr/share/\n\nThe compressed backup is named root_transfusion_"$NOW".tar.gz\n";
+ exit;; # backup and squish
 
 -C|copy|--copy)
 
@@ -241,7 +240,7 @@ case "$1" in
 
 -c|compress|--compress)
 
- #COPYDIR=$(find . -type d -name '*_transfusion_*')
+  echo " ";
   unset options i
   while IFS= read -r -d $'\0' f; do
     options[i++]="$f"
@@ -275,6 +274,13 @@ case "$1" in
 
  echo "$HELP" ;
  exit;;
+
+-p|packagelists|--packagelists)
+
+  pacman -Qqen > ./"$HOSTNAME"_"$NOW"_native.txt; 
+  pacman -Qqem > ./"$HOSTNAME"_"$NOW"_alien.txt;
+  echo -e "\n Packagelists created for 'native' and 'alien' packages and prefixed with '"$HOSTNAME"_"$NOW"'\n";
+  exit;;
  
 -r|restore|--restore)
 
