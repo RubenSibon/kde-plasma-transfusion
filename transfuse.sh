@@ -21,7 +21,7 @@ HELP=$(echo " ";
        echo "#   restore, -r, --restore PATIENT    restore configs /to/ PATIENT   #";
        echo "#                                                                    #";
        echo "#                            **NOTES**                               #";
-       echo "#  pkg* options depnd on pacman package manager                      #";
+       echo "#  pkg* options depend on pacman package manager                      #";
        echo "#  CHARTS=1 environment variable will provide more verbose output    #";
        echo "#                                                                    #";
        echo "######################################################################";
