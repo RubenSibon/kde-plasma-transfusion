@@ -29,7 +29,7 @@ fi
 
 if [ $# -eq 0 ]; 
   then
-  PS3='Please enter your choice: '
+  PS3=$'\n'"Please enter your choice: "
   options=("Backup" "Copy" "Compress" "Restore" "Packagelists" "Quit")
   select opt in "${options[@]}"
   do
