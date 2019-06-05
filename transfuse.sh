@@ -16,7 +16,11 @@ HELP=$(echo " ";
        echo "#  backuproot, -BR, --backuproot              backup root configs   #";
        echo "#  copy, -C, --copy USER                 copy but do not compress   #";
        echo "#  compress, -c, --compress               compress copied configs   #";
+       echo "#  pkglists, -p, --pkglists     create list of installed packages** #";
+       echo "#  pkgrestore, -pr, --pkgrestore         reinstall from a pkglist** #";
        echo "#  restore, -r, --restore PATIENT    restore configs /to/ PATIENT   #";
+       echo "#                                                                   #";
+       echo "#  **    pkg commands depend on the pacman package manager     **   #";
        echo "#                                                                   #";
        echo "#####################################################################";
        echo " ";)
@@ -30,7 +34,7 @@ fi
 if [ $# -eq 0 ]; 
   then
   PS3=$'\n'"Please enter your choice: "
-  options=("Backup" "Copy" "Compress" "Restore" "Packagelists" "Quit")
+  options=("Backup" "Copy" "Compress" "Restore" "Quit")
   select opt in "${options[@]}"
   do
       case $opt in
@@ -271,13 +275,42 @@ case "$1" in
  echo "$HELP" ;
  exit;;
 
--p|packagelists|--packagelists)
+-p|pkglists|--pkglists)
 
-  pacman -Qqen > ./"$HOSTNAME"_"$NOW"_native.txt; 
-  pacman -Qqem > ./"$HOSTNAME"_"$NOW"_alien.txt;
-  echo -e "\n Packagelists created for 'native' and 'alien' packages and prefixed with '"$HOSTNAME"_"$NOW"'\n";
-  exit;;
- 
+ pacman -Qqen > ./"$HOSTNAME"_"$NOW"_native.txt; 
+ pacman -Qqem > ./"$HOSTNAME"_"$NOW"_alien.txt;
+ echo -e "\n Packagelists created for 'native' and 'alien' packages and prefixed with '"$HOSTNAME"_"$NOW"'\n";
+ exit;;
+  
+-pr|pkgrestore|--pkgrestore)
+
+ echo "";
+ unset options i
+ while IFS= read -r -d $'\0' f; do
+   options[i++]="$f"
+ done < <(find . -maxdepth 1 -type f -name "*native.txt" -print0 )
+  select opt in "${options[@]}" "Quit"; do
+    case $opt in
+      *native.txt)
+        echo -e "\nPackage list "$opt" selected\n";
+        sudo pacman -S --needed - < "$opt";
+        break
+        ;;
+      "Quit")
+        echo -e "\nYou chose to quit"
+        break
+        ;;
+      *)
+        echo "Invalid selection"
+        ;;
+    esac
+   if [ ! -f "$opt" ]; then
+    echo -e "\n No package list selected\n";
+    exit;
+   fi;
+  done
+ exit;;
+
 -r|restore|--restore)
 
  shift
@@ -286,14 +319,14 @@ case "$1" in
  while IFS= read -r -d $'\0' f; do
    options[i++]="$f"
  done < <(find . -maxdepth 1 -type f -name "*.tar.gz" -print0 )
-  select opt in "${options[@]}" "Quit the script"; do
+  select opt in "${options[@]}" "Quit"; do
     case $opt in
       *.tar.gz)
         echo -e "\nBackup file $opt selected";
         # processing
         break
         ;;
-      "Quit the script")
+      "Quit")
         echo -e "\nYou chose to quit"
         break
         ;;
@@ -310,7 +343,7 @@ case "$1" in
     if [ ! -f "$opt" ]; then
      echo -e "\n No Backup selected\n";
      exit;
-    fi
+    fi;
  echo -e "";
  read -p "Are you sure you would like to restore "$opt" to /home/$PATIENT/? (Y/N) " -n 1 -r ;
  echo -e "\n";
