@@ -56,10 +56,6 @@ if [ $# -eq 0 ];
               "$0" -r "$PATIENT";
               break
               ;;
-          "Packagelists")
-              "$0" -p;
-              break
-              ;;
           "Quit")
               break
               ;;
