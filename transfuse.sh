@@ -320,7 +320,7 @@ case "$1" in
  unset options i
  while IFS= read -r -d $'\0' f; do
    options[i++]="$f"
- done < <(find . -maxdepth 1 -type f -name "*.tar.gz" -print0 )
+ done < <(find . -maxdepth 1 -type f -name "*.tar.gz" -print0)
   select opt in "${options[@]}" "Quit"; do
     case $opt in
       *.tar.gz)
@@ -346,32 +346,34 @@ case "$1" in
      echo -e "\n No Backup selected\n";
      exit;
     fi;
- echo -e "";
+ echo " ";
  read -p "Are you sure you would like to restore "$opt" to /home/$PATIENT/? (Y/N) " -n 1 -r ;
- echo -e "\n";
+ echo " ";
   if [[ ! $REPLY =~ ^[Yy]$ ]];
    then exit 1;
   fi; 
   if [[ $CHARTS -eq 1 ]]; 
-   then 
-   tar -xzvf "$opt" ;
-   COPYF=${opt::-7}
-   rsync -rltD --ignore-missing-args $COPYF/ --include=".*" /home/$PATIENT/;
+   then
+   mkdir -p /tmp/transfusion;
+   tar -xzvf "$opt" -C /tmp/transfusion/;
+   COPYF=/tmp/transfusion/${opt::-7}
+   rsync -rltDii --ignore-missing-args $COPYF/ --include=".*" /home/$PATIENT/;
    rm -rf "$COPYF" ;
    else
    {
-   tar -xzvf "$opt" ;
+   mkdir -p /tmp/transfusion;
+   tar -xzvf "$opt" -C /tmp/transfusion;
    COPYF=${opt::-7}
    rsync -rltD --ignore-missing-args $COPYF/ --include=".*" /home/$PATIENT/;
    rm -rf "$COPYF" ;
    } &> /dev/null ;
   fi;
-  if [[ $? -gt 0 ]] 
-   then 
-   echo -e "\nConfigs Restored from $COPYF\n" ;
-   else
-   echo -e "Something went wrong.\nAre you sure you have rights to access these folders?\n" ;
-  fi
+   if [[ $? -eq "0" ]] ;
+    then 
+    echo -e "\nConfigs Restored from "$opt"\n" ;
+    else
+    echo -e "Something went wrong.\nAre you sure you have rights to access these folders?\n";
+   fi;
  else
  echo -e "\n I dont know what to do";
  echo "$HELP";
