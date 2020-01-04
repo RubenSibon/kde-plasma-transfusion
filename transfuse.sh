@@ -389,6 +389,7 @@ case "$1" in
    if [[ $? -eq "0" ]] ;
     then 
     echo -e "\nConfigs Restored from "$opt"\n" ;
+    kquitapp5 plasmashell && kstart5 plasmashell </dev/null &>/dev/null &
     else
     echo -e "Something went wrong.\nAre you sure you have rights to access these folders?\n";
    fi;
