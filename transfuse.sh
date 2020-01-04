@@ -381,7 +381,7 @@ case "$1" in
    {
    mkdir -p /tmp/transfusion;
    tar -xzvf "$opt" -C /tmp/transfusion;
-   COPYF=${opt::-7}
+   COPYF=/tmp/transfusion/${opt::-7}
    rsync -rltD --ignore-missing-args $COPYF/ --include=".*" /home/$PATIENT/;
    rm -rf "$COPYF" ;
    } &> /dev/null ;
