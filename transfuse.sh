@@ -363,6 +363,12 @@ case "$1" in
  echo " ";
   if [[ ! $REPLY =~ ^[Yy]$ ]];
    then exit 1;
+  fi;
+  if [ -z "$COVERED" ]; then
+  sed -i '/Contain.*\[Wallpaper\]/!b;n;cImage=file:///home/'"$PATIENT"'/.local/share/wallpapers/flowers' /home/"$PATIENT"/.config/plasma-org.kde.plasma.desktop-appletsrc;
+  else
+  echo -e '\n You are "Covered", meaning no change will be made to configured wallpaper selection.';
+  echo -e 'That, or there was an error, in which case yell at cscs.';
   fi; 
   if [[ $CHARTS -eq 1 ]]; 
    then
@@ -370,12 +376,6 @@ case "$1" in
    tar -xzvf "$opt" -C /tmp/transfusion/;
    COPYF=/tmp/transfusion/${opt::-7}
    rsync -rltDii --ignore-missing-args $COPYF/ --include=".*" /home/$PATIENT/;
-    if [ -z "$COVERED" ]; then
-    sed -i '/Contain.*\[Wallpaper\]/!b;n;cImage=file:///home/$PATIENT/.local/share/wallpapers/flowers' /home/"PATIENT"/.config/plasma-org.kde.plasma.desktop-appletsrc;
-    else
-    echo -e '\n You are "Covered", meaning no change will be made to configured wallpaper selection.';
-    echo -e 'That, or there was an error, in which case yell at cscs.';
-    fi;
    rm -rf "$COPYF" ;
    else
    {
@@ -383,12 +383,6 @@ case "$1" in
    tar -xzvf "$opt" -C /tmp/transfusion;
    COPYF=${opt::-7}
    rsync -rltD --ignore-missing-args $COPYF/ --include=".*" /home/$PATIENT/;
-    if [ -z "$COVERED" ]; then
-    sed -i '/Contain.*\[Wallpaper\]/!b;n;cImage=file:///home/$PATIENT/.local/share/wallpapers/flowers' /home/"PATIENT"/.config/plasma-org.kde.plasma.desktop-appletsrc;
-    else
-    echo -e '\n You are "Covered", meaning no change will be made to configured wallpaper selection.';
-    echo -e 'That, or there was an error, in which case yell at cscs.';
-    fi;
    rm -rf "$COPYF" ;
    } &> /dev/null ;
   fi;
