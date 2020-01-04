@@ -131,6 +131,16 @@ case "$1" in
  rsync -rltD --ignore-missing-args /home/$YOU/.local/share/kxmlgui5/ ./"$YOU"_transfusion_"$NOW"/.local/share/;
  rsync -rltD --ignore-missing-args /home/$YOU/.local/share/plasma ./"$YOU"_transfusion_"$NOW"/.local/share/;
  rsync -rltD --ignore-missing-args /home/$YOU/.local/share/plasma_icons ./"$YOU"_transfusion_"$NOW"/.local/share/;
+  if [ -z "$COVERED" ]; then
+   mkdir -p ./"$YOU"_transfusion_"$NOW"/.local/share/wallpapers;
+   OLDFLWR=$(awk -F: '/\[Wallpaper\]/ && $0 != "" { getline; print substr($0,14,length($0)-13) }' /home/$YOU/.config/plasma-org.kde.plasma.desktop-appletsrc);
+   AROSE=$(basename -- "$OLDFLWR");
+   rsync -rltD --ignore-missing-args "$OLDFLWR" ./"$YOU"_transfusion_"$NOW"/.local/share/wallpapers;
+   mv ./"$YOU"_transfusion_"$NOW"/.local/share/wallpapers/"$AROSE" ./"$YOU"_transfusion_"$NOW"/.local/share/wallpapers/flowers;
+   else
+   echo -e '\n You are "Covered", meaning no wallpaper was copied.';
+   echo -e 'That, or there was an error, in which case yell at cscs.';
+  fi;
   if [[ $CHARTS -eq 1 ]]; 
    then
    tar -zcvf ./"$YOU"_transfusion_"$NOW".tar.gz ./"$YOU"_transfusion_"$NOW";
@@ -360,6 +370,12 @@ case "$1" in
    tar -xzvf "$opt" -C /tmp/transfusion/;
    COPYF=/tmp/transfusion/${opt::-7}
    rsync -rltDii --ignore-missing-args $COPYF/ --include=".*" /home/$PATIENT/;
+    if [ -z "$COVERED" ]; then
+    sed -i '/Contain.*\[Wallpaper\]/!b;n;cImage=file:///home/$PATIENT/.local/share/wallpapers/flowers' /home/"PATIENT"/.config/plasma-org.kde.plasma.desktop-appletsrc;
+    else
+    echo -e '\n You are "Covered", meaning no change will be made to configured wallpaper selection.';
+    echo -e 'That, or there was an error, in which case yell at cscs.';
+    fi;
    rm -rf "$COPYF" ;
    else
    {
@@ -367,6 +383,12 @@ case "$1" in
    tar -xzvf "$opt" -C /tmp/transfusion;
    COPYF=${opt::-7}
    rsync -rltD --ignore-missing-args $COPYF/ --include=".*" /home/$PATIENT/;
+    if [ -z "$COVERED" ]; then
+    sed -i '/Contain.*\[Wallpaper\]/!b;n;cImage=file:///home/$PATIENT/.local/share/wallpapers/flowers' /home/"PATIENT"/.config/plasma-org.kde.plasma.desktop-appletsrc;
+    else
+    echo -e '\n You are "Covered", meaning no change will be made to configured wallpaper selection.';
+    echo -e 'That, or there was an error, in which case yell at cscs.';
+    fi;
    rm -rf "$COPYF" ;
    } &> /dev/null ;
   fi;
