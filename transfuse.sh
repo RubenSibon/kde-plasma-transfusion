@@ -34,39 +34,46 @@ if [ "$EUID" = 0 ];
 fi
 
 if [ $# -eq 0 ]; 
-  then
+  then echo "";
+  while true; do
   PS3=$'\n'"Please enter your choice: "
-  options=("Backup" "Copy" "Compress" "Restore" "Quit")
+  options=("Backup" "Copy" "Compress" "Restore" "Help" "Quit")
+  COLUMNS=26
   select opt in "${options[@]}"
   do
-      case $opt in
-          "Backup")
+      case "$opt,$REPLY" in
+          Backup,*|*,[bB]ackup)
               echo ""
               read -p "Please enter the name of the user to backup and compress configs from: "  YOU
               "$0" -b "$YOU";
               break
               ;;
-          "Copy")
+          Copy,*|*,[cC]opy)
               echo ""
               read -p "Please enter the name of the user to copy configs from: "  YOU
               "$0" -C "$YOU";
               break
               ;;
-          "Compress")
+          Compress,*|*,[cC]ompress)
               "$0" -c;
               break
               ;;
-          "Restore")
+          Restore,*|*,[rR]estore)
               echo ""
               read -p "Please enter the name of the user to restore configs to: "  PATIENT
               "$0" -r "$PATIENT";
               break
               ;;
-          "Quit")
+          Help,*|*,[hH]elp)
+              "$0" -h;
               break
+              ;;             
+          Quit,*|*,[qQ]uit)
+              break 2
               ;;
           *) echo "invalid option $REPLY";;
       esac
+  done;
   done;
 fi;
 
@@ -308,6 +315,45 @@ case "$1" in
       *native.txt)
         echo -e "\nPackage list "$opt" selected\n";
         sudo pacman -S --needed - < "$opt";
+        break
+        ;;
+      "Quit")
+        echo -e "\nYou chose to quit"
+        break
+        ;;
+      *)
+        echo "Invalid selection"
+        ;;
+    esac
+   if [ ! -f "$opt" ]; then
+    echo -e "\n No package list selected\n";
+    exit;
+   fi;
+  done
+ exit;;
+
+-pra|pkgrestorealien|--pkgrestorealien)
+
+ echo "";
+ unset options i
+ while IFS= read -r -d $'\0' f; do
+   options[i++]="$f"
+ done < <(find . -maxdepth 1 -type f -name "*_alien.txt" -print0 )
+  select opt in "${options[@]}" "Quit"; do
+    case $opt in
+      *_alien.txt)
+        echo -e "\nPackage list "$opt" selected\n";
+        if command -v yay 2>/dev/null; then
+         yay -Sa --needed - < "$opt";
+        elif command -v pacaur 2>/dev/null; then
+         pacaur -S --needed - < "$opt";
+        elif command -v pikaur 2>/dev/null; then
+         pikaur -S --needed - < "$opt";
+        elif command -v trizen 2>/dev/null; then
+         trizen -S --needed - < "$opt";
+        else
+         echo "Either you have no aur helper or you should yell at cscs"
+        fi
         break
         ;;
       "Quit")
