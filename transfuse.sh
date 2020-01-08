@@ -346,11 +346,11 @@ case "$1" in
         if command -v yay 2>/dev/null; then
          yay -Sa --needed - < "$opt";
         elif command -v pacaur 2>/dev/null; then
-         pacaur -S --needed - < "$opt";
+         pacaur -Sa --needed - < "$opt";
         elif command -v pikaur 2>/dev/null; then
-         pikaur -S --needed - < "$opt";
+         pikaur -Sa --needed - < "$opt";
         elif command -v trizen 2>/dev/null; then
-         trizen -S --needed - < "$opt";
+         trizen -Sa --needed - < "$opt";
         else
          echo "Either you have no aur helper or you should yell at cscs"
         fi
