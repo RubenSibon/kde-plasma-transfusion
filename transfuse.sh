@@ -343,14 +343,17 @@ case "$1" in
     case $opt in
       *_alien.txt)
         echo -e "\nPackage list "$opt" selected\n";
+        ALIENLIST=$(cat "$opt" | tr '\n' ' ')
         if command -v yay 2>/dev/null; then
          yay -Sa --needed - < "$opt";
-        elif command -v pacaur 2>/dev/null; then
-         pacaur -Sa --needed - < "$opt";
-        elif command -v pikaur 2>/dev/null; then
-         pikaur -Sa --needed - < "$opt";
         elif command -v trizen 2>/dev/null; then
          trizen -Sa --needed - < "$opt";
+        elif command -v pikaur 2>/dev/null; then
+         pikaur -Sa --needed - < "$opt";
+        elif command -v pacaur 2>/dev/null; then
+         pacaur -Sa --needed $ALIENLIST;
+        elif command -v pamac 2>/dev/null; then
+         pamac build $ALIENLIST;
         else
          echo "Either you have no aur helper or you should yell at cscs"
         fi
