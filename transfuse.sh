@@ -4,30 +4,30 @@
 #####                        cscs                       #####
 
 HELP=$(echo " ";
-       echo "########################################################################";
-       echo "#                                                                      #";
-       echo "#   TRANSFUSE - a Script to Backup and Restore Plasma User Configs     #";
-       echo "#                                                                      #";
-       echo "#   transfuse.sh [option] [USER/PATIENT]                               #";
-       echo "#                                                                      #";
-       echo "#   options:                                                           #";
-       echo "#   help, -h, --help                                 show brief help   #";
-       echo "#   backup, -b, --backup USER                    backup USER configs   #";
-       echo "#   backuptopical, -bt, --backupt USER        backup USER appearance   #";
-       echo "#   backuproot, -BR, --backuproot                backup root configs   #";
-       echo "#   copy, -C, --copy USER                   copy but do not compress   #";
-       echo "#   compress, -c, --compress                 compress copied configs   #";
-       echo "#   pkglists, -p, --pkglists       create list of installed packages * #";
-       echo "#   pkgrestore, -pr, --pkgrestore           reinstall from a pkglist * #";
-       echo "#   restore, -r, --restore PATIENT      restore configs /to/ PATIENT   #";
-       echo "#                                                                      #";
-       echo "#                              **NOTES**                               #";
-       echo "#                                                                      #";
-       echo "#   Environment Variable   CHARTS=1    Provide more verbose output     #";
-       echo "#   Environment Variable   COVERED=1   Forgo all wallpapers steps      #";
-       echo "#   pkg* options depend on pacman package manager                      #";
-       echo "#                                                                      #";
-       echo "########################################################################";
+       echo "#########################################################################";
+       echo "#                                                                       #";
+       echo "#   TRANSFUSE - a Script to Backup and Restore Plasma User Configs      #";
+       echo "#                                                                       #";
+       echo "#   transfuse.sh [option] [USER/PATIENT]                                #";
+       echo "#                                                                       #";
+       echo "#   options:                                                            #";
+       echo "#   help, -h, --help                                  show brief help   #";
+       echo "#   backup, -b, --backup USER                     backup USER configs   #";
+       echo "#   backuptopical, -bt, --backupt USER         backup USER appearance   #";
+       echo "#   backuproot, -BR, --backuproot                 backup root configs   #";
+       echo "#   copy, -C, --copy USER                    copy but do not compress   #";
+       echo "#   compress, -c, --compress                  compress copied configs   #";
+       echo "#   pkglists, -p, --pkglists        create list of installed packages * #";
+       echo "#   pkgrestore, -pr, --pkgrestore            reinstall from a pkglist * #";
+       echo "#   restore, -r, --restore PATIENT       restore configs /to/ PATIENT   #";
+       echo "#                                                                       #";
+       echo "#                                 NOTES                                 #";
+       echo "#                   ---------------------------------                   #";
+       echo "#   Environment Variable        CHARTS=1          More verbose output   #";
+       echo "#   Environment Variable        COVERED=1       Forgo wallpaper steps   #";
+       echo "#   * pkg* options depend on pacman package manager                     #";
+       echo "#                                                                       #";
+       echo "#########################################################################";
        echo " ";)
 NOW=$(date +"%Y%m%d_%H%M")
 # We dont need no stinkin coppers.
@@ -168,7 +168,7 @@ case "$1" in
  fi;
  shift;; # backup and squish
 
--bt|backuptopical|--backuptopical)
+-bt|backuptopical|--backupt)
 
  shift
  if test $# -gt 0; then
