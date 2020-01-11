@@ -4,27 +4,30 @@
 #####                        cscs                       #####
 
 HELP=$(echo " ";
-       echo "######################################################################";
-       echo "#                                                                    #";
-       echo "#   TRANSFUSE - a Script to Backup and Restore Plasma User Configs   #";
-       echo "#                                                                    #";
-       echo "#   transfuse.sh [option] [USER/PATIENT]                             #";
-       echo "#                                                                    #";
-       echo "#   options:                                                         #";
-       echo "#   help, -h, --help                               show brief help   #";
-       echo "#   backup, -b, --backup USER                  backup USER configs   #";
-       echo "#   backuproot, -BR, --backuproot              backup root configs   #";
-       echo "#   copy, -C, --copy USER                 copy but do not compress   #";
-       echo "#   compress, -c, --compress               compress copied configs   #";
-       echo "#   pkglists, -p, --pkglists     create list of installed packages** #";
-       echo "#   pkgrestore, -pr, --pkgrestore         reinstall from a pkglist** #";
-       echo "#   restore, -r, --restore PATIENT    restore configs /to/ PATIENT   #";
-       echo "#                                                                    #";
-       echo "#                            **NOTES**                               #";
-       echo "#  pkg* options depend on pacman package manager                     #";
-       echo "#  CHARTS=1 environment variable will provide more verbose output    #";
-       echo "#                                                                    #";
-       echo "######################################################################";
+       echo "########################################################################";
+       echo "#                                                                      #";
+       echo "#   TRANSFUSE - a Script to Backup and Restore Plasma User Configs     #";
+       echo "#                                                                      #";
+       echo "#   transfuse.sh [option] [USER/PATIENT]                               #";
+       echo "#                                                                      #";
+       echo "#   options:                                                           #";
+       echo "#   help, -h, --help                                 show brief help   #";
+       echo "#   backup, -b, --backup USER                    backup USER configs   #";
+       echo "#   backuptopical, -bt, --backupt USER        backup USER appearance   #";
+       echo "#   backuproot, -BR, --backuproot                backup root configs   #";
+       echo "#   copy, -C, --copy USER                   copy but do not compress   #";
+       echo "#   compress, -c, --compress                 compress copied configs   #";
+       echo "#   pkglists, -p, --pkglists       create list of installed packages * #";
+       echo "#   pkgrestore, -pr, --pkgrestore           reinstall from a pkglist * #";
+       echo "#   restore, -r, --restore PATIENT      restore configs /to/ PATIENT   #";
+       echo "#                                                                      #";
+       echo "#                              **NOTES**                               #";
+       echo "#                                                                      #";
+       echo "#   Environment Variable   CHARTS=1    Provide more verbose output     #";
+       echo "#   Environment Variable   COVERED=1   Forgo all wallpapers steps      #";
+       echo "#   pkg* options depend on pacman package manager                      #";
+       echo "#                                                                      #";
+       echo "########################################################################";
        echo " ";)
 NOW=$(date +"%Y%m%d_%H%M")
 # We dont need no stinkin coppers.
@@ -126,7 +129,7 @@ case "$1" in
  rsync -rltD --ignore-missing-args /home/$YOU/.config/powermanagementprofilesrc ./"$YOU"_transfusion_"$NOW"/.config/;
  rsync -rltD --ignore-missing-args /home/$YOU/.config/pulse/*.conf ./"$YOU"_transfusion_"$NOW"/.config/pulse/;
  rsync -rltD --ignore-missing-args /home/$YOU/.config/qtcurve ./"$YOU"_transfusion_"$NOW"/.config/;
- rsync -rltD --ignore-missing-args /home/$YOU/.config/trolltech.conf ./"$YOU"_transfusion_"$NOW"/.config/;
+ rsync -rltD --ignore-missing-args /home/$YOU/.config/Trolltech.conf ./"$YOU"_transfusion_"$NOW"/.config/;
  rsync -rltD --ignore-missing-args /home/$YOU/.gtkrc-2.0 ./"$YOU"_transfusion_"$NOW"/;
  rsync -rltD --ignore-missing-args /home/$YOU/.kde ./"$YOU"_transfusion_"$NOW"/;
  rsync -rltD --ignore-missing-args /home/$YOU/.kde4 ./"$YOU"_transfusion_"$NOW"/;
@@ -189,7 +192,7 @@ case "$1" in
   rsync -rltD --ignore-missing-args /home/$YOU/.config/lattedockrc ./"$YOU"_transfusion_"$NOW"/.config/;
   rsync -rltD --ignore-missing-args /home/$YOU/.config/plasmarc ./"$YOU"_transfusion_"$NOW"/.config/;
   rsync -rltD --ignore-missing-args /home/$YOU/.config/qtcurve ./"$YOU"_transfusion_"$NOW"/.config/;
-  rsync -rltD --ignore-missing-args /home/$YOU/.config/trolltech.conf ./"$YOU"_transfusion_"$NOW"/.config/;
+  rsync -rltD --ignore-missing-args /home/$YOU/.config/Trolltech.conf ./"$YOU"_transfusion_"$NOW"/.config/;
   rsync -rltD --ignore-missing-args /home/$YOU/.gtkrc-2.0 ./"$YOU"_transfusion_"$NOW"/;
   rsync -rltD --ignore-missing-args /home/$YOU/.kde ./"$YOU"_transfusion_"$NOW"/;
   rsync -rltD --ignore-missing-args /home/$YOU/.local/share/aurorae ./"$YOU"_transfusion_"$NOW"/.local/share/;
@@ -208,7 +211,7 @@ case "$1" in
   fi;
  rm -rf ./"$YOU"_transfusion_"$NOW";
  echo -e "\nWe copied and compressed items recursively from:\n\n~\n~/.config\n~/.local/share\n\nThe compressed backup is timestamped and named "$YOU"_transfusion_T-"$NOW".tar.gz" ;
- echo -e "\nThis is a 'topical' backup, meaning only the minimum of themes and aesthetics are saved.\n"
+ echo -e "\nThis is a 'topical' backup. Only the minimum of themes and aesthetics are saved.\n"
  else 
  echo -e "\n I dont know what to do";
  echo "$HELP";
