@@ -165,6 +165,57 @@ case "$1" in
  fi;
  shift;; # backup and squish
 
+-bt|backuptopical|--backuptopical)
+
+ shift
+ if test $# -gt 0; then
+ YOU=`echo $1 | sed -e 's/^[^ ]* //g'`
+  if [ ! -d "/home/$YOU" ]; then
+   echo -e "\n Directory /home/$YOU does not exist\n";
+   exit;
+  fi;
+  mkdir -p ./"$YOU"_transfusion_"$NOW";
+  mkdir -p ./"$YOU"_transfusion_"$NOW"/.config;
+  mkdir -p ./"$YOU"_transfusion_"$NOW"/.kde;
+  mkdir -p ./"$YOU"_transfusion_"$NOW"/.local/share;
+  rsync -rltD --ignore-missing-args /home/$YOU/.config/auroraerc ./"$YOU"_transfusion_"$NOW"/.config/;
+  rsync -rltD --ignore-missing-args /home/$YOU/.config/gtk-3.0 ./"$YOU"_transfusion_"$NOW"/.config/;
+  rsync -rltD --ignore-missing-args /home/$YOU/.config/kdeglobals ./"$YOU"_transfusion_"$NOW"/.config/;
+  rsync -rltD --ignore-missing-args /home/$YOU/.config/kscreenlockerrc ./"$YOU"_transfusion_"$NOW"/.config/;
+  rsync -rltD --ignore-missing-args /home/$YOU/.config/ksplashrc ./"$YOU"_transfusion_"$NOW"/.config/;
+  rsync -rltD --ignore-missing-args /home/$YOU/.config/kvantum ./"$YOU"_transfusion_"$NOW"/.config/;
+  rsync -rltD --ignore-missing-args /home/$YOU/.config/kwinrc ./"$YOU"_transfusion_"$NOW"/.config/;
+  rsync -rltD --ignore-missing-args /home/$YOU/.config/latte ./"$YOU"_transfusion_"$NOW"/.config/;
+  rsync -rltD --ignore-missing-args /home/$YOU/.config/lattedockrc ./"$YOU"_transfusion_"$NOW"/.config/;
+  rsync -rltD --ignore-missing-args /home/$YOU/.config/plasmarc ./"$YOU"_transfusion_"$NOW"/.config/;
+  rsync -rltD --ignore-missing-args /home/$YOU/.config/qtcurve ./"$YOU"_transfusion_"$NOW"/.config/;
+  rsync -rltD --ignore-missing-args /home/$YOU/.config/trolltech.conf ./"$YOU"_transfusion_"$NOW"/.config/;
+  rsync -rltD --ignore-missing-args /home/$YOU/.gtkrc-2.0 ./"$YOU"_transfusion_"$NOW"/;
+  rsync -rltD --ignore-missing-args /home/$YOU/.kde ./"$YOU"_transfusion_"$NOW"/;
+  rsync -rltD --ignore-missing-args /home/$YOU/.local/share/aurorae ./"$YOU"_transfusion_"$NOW"/.local/share/;
+  rsync -rltD --ignore-missing-args /home/$YOU/.local/share/color-schemes ./"$YOU"_transfusion_"$NOW"/.local/share/;
+  rsync -rltD --ignore-missing-args /home/$YOU/.local/share/konsole ./"$YOU"_transfusion_"$NOW"/.local/share/;
+  rsync -rltD --ignore-missing-args /home/$YOU/.local/share/kxmlgui5/ ./"$YOU"_transfusion_"$NOW"/.local/share/;
+  rsync -rltD --ignore-missing-args /home/$YOU/.local/share/plasma ./"$YOU"_transfusion_"$NOW"/.local/share/;
+  rsync -rltD --ignore-missing-args /home/$YOU/.local/share/plasma_icons ./"$YOU"_transfusion_"$NOW"/.local/share/;
+  if [[ $CHARTS -eq 1 ]]; 
+   then
+   tar -zcvf ./"$YOU"_transfusion_T-"$NOW".tar.gz ./"$YOU"_transfusion_"$NOW";
+   else 
+   { 
+   tar -zcvf ./"$YOU"_transfusion_T-"$NOW".tar.gz ./"$YOU"_transfusion_"$NOW";
+   } &> /dev/null;
+  fi;
+ rm -rf ./"$YOU"_transfusion_"$NOW";
+ echo -e "\nWe copied and compressed items recursively from:\n\n~\n~/.config\n~/.local/share\n\nThe compressed backup is timestamped and named "$YOU"_transfusion_T-"$NOW".tar.gz" ;
+ echo -e "\nThis is a 'topical' backup, meaning only the minimum of themes and aesthetics are saved.\n"
+ else 
+ echo -e "\n I dont know what to do";
+ echo "$HELP";
+ exit;
+ fi;
+ shift;; # backup and squish
+
 -BR|backuproot|--backuproot)
 
  mkdir -p ./root_transfusion_"$NOW";
