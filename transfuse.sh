@@ -4,7 +4,8 @@
 #####                        cscs                       #####
 underline=`tput smul`
 nounderline=`tput rmul`
-HELP=$(echo "#########################################################################";
+HELP=$(echo " ";
+       echo "#########################################################################";
        echo "#                                                                       #";
        echo "#   TRANSFUSE - a Script to Backup and Restore Plasma User Configs      #";
        echo "#                                                                       #";
@@ -26,7 +27,8 @@ HELP=$(echo "###################################################################
        echo "#   Environment Variable        COVERED=1       Forgo wallpaper steps   #";
        echo "#   * pkg* options depend on pacman package manager                     #";
        echo "#                                                                       #";
-       echo "#########################################################################";)
+       echo "#########################################################################";
+       echo " ";)
 NOW=$(date +"%Y%m%d_%H%M")
 # We dont need no stinkin coppers.
 if [ "$EUID" = 0 ];
