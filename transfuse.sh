@@ -2,9 +2,9 @@
 #                        transfuse.sh                       #
 ## Automates backing up and restoring Plasma user configs   #
 #####                        cscs                       #####
-
-HELP=$(echo " ";
-       echo "#########################################################################";
+underline=`tput smul`
+nounderline=`tput rmul`
+HELP=$(echo "#########################################################################";
        echo "#                                                                       #";
        echo "#   TRANSFUSE - a Script to Backup and Restore Plasma User Configs      #";
        echo "#                                                                       #";
@@ -21,14 +21,12 @@ HELP=$(echo " ";
        echo "#   pkgrestore, -pr, --pkgrestore            reinstall from a pkglist * #";
        echo "#   restore, -r, --restore PATIENT       restore configs /to/ PATIENT   #";
        echo "#                                                                       #";
-       echo "#                                 NOTES                                 #";
-       echo "#                   ---------------------------------                   #";
+       echo "#                               ${underline}  NOTES  ${nounderline}                               #";
        echo "#   Environment Variable        CHARTS=1          More verbose output   #";
        echo "#   Environment Variable        COVERED=1       Forgo wallpaper steps   #";
        echo "#   * pkg* options depend on pacman package manager                     #";
        echo "#                                                                       #";
-       echo "#########################################################################";
-       echo " ";)
+       echo "#########################################################################";)
 NOW=$(date +"%Y%m%d_%H%M")
 # We dont need no stinkin coppers.
 if [ "$EUID" = 0 ];
